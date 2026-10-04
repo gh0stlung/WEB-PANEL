@@ -3,7 +3,7 @@
 <img src="https://img.shields.io/badge/STORAGE-LOCAL-000000?style=for-the-badge&logo=databricks&logoColor=00f3ff"/>
 <img src="https://img.shields.io/badge/PWA-READY-000000?style=for-the-badge&logo=pwa&logoColor=00f3ff"/><br><br>
 
-<a href="YOUR_VERCEL_URL">
+<a href="https://tornwebpanel.vercel.app/">
 <img src="https://img.shields.io/badge/LAUNCH_PANEL-LIVE_>>-ff1744?style=for-the-badge&labelColor=000000"/>
 </a></div>---
 
