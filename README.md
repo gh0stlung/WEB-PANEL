@@ -5,23 +5,26 @@
 
 <a href="https://tornwebpanel.vercel.app/">
 <img src="https://img.shields.io/badge/LAUNCH_PANEL-LIVE_>>-ff1744?style=for-the-badge&labelColor=000000"/>
-</a></div>---
+</a></div>
 
+__________________________________
 ⚡ TORN X PANEL
-
-«TORN X PANEL»
-
-No complicated backend.
-No required cloud database.
-Your local panel data stays on your device/browser.
+- No complicated backend.
+- No required cloud database.
+- Your locYouranel data stays on your device/browser.
 
 
-*YOU KNOW WHAT IS PANEL MEANS 🤫 , you can use Firebase url or extract by any moded apk and can control devices by my panel 
--CAN SEE LIVE MESSAGE INBOX OF ONLINE DEVICE
--CAN SEND MESSAGE ANYONE BY THAT DEVICE NUMBER
--CAN SEE 📍,💳 IF AVAILABLE 🤧*
----
+______________________________________
 
+
+✦ YOU KNOW WHAT IS PANEL MEANS 🤫 , 
+- you can use Firebase url or extract by any moded apk and can control devices by my panel 
+- CAN SEE LIVE MESSAGE INBOX OF ONLINE DEVICANYONEN SEND MESSAGE ANYONE BY THAT DEVICE NUMBER
+- CAN SEE 📍,💳 IF AVAILABLE 🤧
+
+
+
+__________________________________________
 ✦ FEATURES
 
 - ⚡ Fast & lightweight web interface
