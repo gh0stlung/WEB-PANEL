@@ -9,14 +9,17 @@
 
 ⚡ TORN X PANEL
 
-«TORN X PANEL is a lightweight web-based panel designed for fast access, simple management, and a clean cyber-style interface.»
+«TORN X PANEL»
 
 No complicated backend.
 No required cloud database.
 Your local panel data stays on your device/browser.
 
 
-*YOU KNOW WHAT IS PANEL MEANS 🤫 , you can use Firebase url or extract by any moded apk and can control devices by my panel 🤧*
+*YOU KNOW WHAT IS PANEL MEANS 🤫 , you can use Firebase url or extract by any moded apk and can control devices by my panel 
+-CAN SEE LIVE MESSAGE INBOX OF ONLINE DEVICE
+-CAN SEND MESSAGE ANYONE BY THAT DEVICE NUMBER
+-CAN SEE 📍,💳 IF AVAILABLE 🤧*
 ---
 
 ✦ FEATURES
@@ -26,10 +29,7 @@ Your local panel data stays on your device/browser.
 - 📱 Mobile-friendly design
 - 🖥️ Desktop support
 - 📲 Install as an app (PWA)
-- 🌐 Works with GitHub + Vercel
-- 🔄 Offline-ready interface
-- 📦 Easy backup / restore
-- 🛡️ No central database for your local panel data
+-🛡️ No central database for your local ppaneldata
 
 ---
 
