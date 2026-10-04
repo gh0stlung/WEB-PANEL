@@ -15,6 +15,8 @@ No complicated backend.
 No required cloud database.
 Your local panel data stays on your device/browser.
 
+
+*YOU KNOW WHAT IS PANEL MEANS 🤫 , you can use Firebase url or extract by any moded apk and can control devices by my panel 🤧*
 ---
 
 ✦ FEATURES
